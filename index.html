@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP Store Professional - VIPs e Veículos Exclusivos</title>
+    <!-- Carrega o Tailwind CSS e a fonte Inter -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0d0d; /* Fundo extra escuro */
+            color: #e5e5e5;
+        }
+        /* Definições de cores e classes para o Tailwind */
+        .text-primary-red { color: #DC2626; }
+        .bg-card-bg { background-color: #1a1a1a; }
+        .bg-sub-bg { background-color: #262626; }
+        .bg-dark-bg { background-color: #0d0d0d; }
+        /* NOVAS CORES DISCORD */
+        .bg-discord-dark { background-color: #23272A; }
+        .text-discord-purple { color: #5865F2; }
+        .bg-discord-purple { background-color: #5865F2; }
+
+
+        /* Efeito de Hover Avançado para Cards */
+        .hover-effect {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid transparent;
+        }
+        .hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4); /* Sombra vermelha no hover */
+            border-color: #DC2626;
+        }
+        /* Efeito de destaque para botões principais */
+        .btn-primary {
+            transition: all 0.3s;
+            background: linear-gradient(90deg, #DC2626 0%, #B91C1C 100%);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #B91C1C 0%, #991B1B 100%);
+            transform: scale(1.03);
+        }
+        /* Estilo para a barra lateral ativa */
+        .sidebar-active {
+            position: relative;
+            background-color: #262626;
+            font-weight: 600;
+        }
+        .sidebar-active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #DC2626;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* --- ANIMAÇÃO JAVASCRIPT/CSS --- */
+        /* Define a animação de Fade-In e Slide-Up */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Classe aplicada pelo JavaScript para disparar a animação no carregamento do conteúdo */
+        .content-fade-in {
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+        /* Fixa a sidebar no desktop/tablet e garante que ela esteja acima do conteúdo principal no mobile */
+        .sidebar-fixed {
+            top: 72px; /* Altura do header */
+            height: calc(100vh - 72px);
+        }
+        /* Estilo para o menu mobile aberto */
+        .mobile-menu-open {
+            transform: translateX(0);
+            box-shadow: 10px 0 20px rgba(0, 0, 0, 0.5);
+        }
+        /* Estilo para o menu mobile fechado */
+        .mobile-menu-closed {
+            transform: translateX(-100%);
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Configuração do Tailwind (Redundante, mas útil para o preview do iFrame) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-red': '#DC2626',
+                        'dark-bg': '#0d0d0d',
+                        'card-bg': '#1a1a1a',
+                        'sub-bg': '#262626',
+                        'discord-purple': '#5865F2',
+                        'discord-dark': '#23272A',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Header (Cabeçalho superior) -->
+    <header class="bg-sub-bg shadow-xl z-30 sticky top-0">
+        <div class="max-w-7xl mx-auto p-4 flex justify-between items-center w-full">
+            <div class="flex items-center">
+                <!-- Botão de Menu Mobile -->
+                <button id="mobile-menu-button" class="text-white text-2xl p-2 rounded-lg hover:bg-card-bg sm:hidden mr-3">
+                    &#9776; <!-- Ícone de hambúrguer -->
+                </button>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                <span class="text-primary-red">NARNIA</span> Store <span class="text-gray-500 text-sm hidden sm:inline-block">/ Exclusivo</span>
+                </h1>
+            </div>
+            <span class="text-sm font-medium text-gray-400">Status: Online &#9679;</span>
+        </div>
+    </header>
+
+    <!-- Layout Principal - Sidebar e Conteúdo -->
+    <div class="flex flex-1 max-w-7xl mx-auto w-full relative">
+        
+        <!-- Sidebar de Navegação (Menu) - Desktop e Mobile -->
+        <aside id="sidebar" 
+               class="fixed z-20 sm:sticky sidebar-fixed w-56 bg-sub-bg p-4 transition-transform duration-300 mobile-menu-closed sm:translate-x-0 sm:w-20 md:w-56 overflow-y-auto">
+            <nav class="space-y-3">
+                <button id="nav-home" onclick="navigateTo('home')" class="w-full text-left py-3 px-3 rounded-xl text-gray-300 hover:bg-card-bg transition duration-200 flex items-center space-x-3">
+                    <span class="text-xl">&#127968;</span><span class="hidden md:inline"> Início</span>
+                </button>
+                <button id="nav-vips" onclick="navigateTo('vips')" class="w-full text-left py-3 px-3 rounded-xl text-gray-300 hover:bg-card-bg transition duration-200 flex items-center space-x-3">
+                    <span class="text-xl">&#9813;</span><span class="hidden md:inline"> Planos VIP</span>
+                </button>
+                <button id="nav-vehicles" onclick="navigateTo('vehicles')" class="w-full text-left py-3 px-3 rounded-xl text-gray-300 hover:bg-card-bg transition duration-200 flex items-center space-x-3">
+                    <span class="text-xl">&#128663;</span><span class="hidden md:inline"> Veículos Exclusivos</span>
+                </button>
+                <button id="nav-mansions" onclick="navigateTo('mansions')" class="w-full text-left py-3 px-3 rounded-xl text-gray-300 hover:bg-card-bg transition duration-200 flex items-center space-x-3">
+                    <span class="text-xl">&#127969;</span><span class="hidden md:inline"> Mansões</span>
+                </button>
+                <button id="nav-extras" onclick="navigateTo('extras')" class="w-full text-left py-3 px-3 rounded-xl text-gray-300 hover:bg-card-bg transition duration-200 flex items-center space-x-3">
+                    <span class="text-xl">&#127873;</span><span class="hidden md:inline"> Extras e Kits</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Container de Conteúdo Principal. Ajustado o margin-left para acomodar a sidebar colapsada/expandida -->
+        <div class="flex-1 w-full sm:ml-20 md:ml-56 lg:ml-0">
+             <!-- Conteúdo Principal Dinâmico -->
+             <main id="content-container" class="p-6 md:p-8 overflow-y-auto">
+                 <!-- O conteúdo da página (home, vips, details, instructions) será renderizado aqui -->
+             </main>
+        </div>
+       
+    </div>
+
+    <!-- JavaScript para Lógica e Interatividade -->
+    <script>
+        // --- DATA DE EXEMPLO ---
+        // ATENÇÃO: As imagens são placeholders para demonstração. O caminho './imagens/...' é simbólico.
+
+        const vipData = [
+            // ATUALIZADO: Usando a chave 'image' com estrutura de caminho local.
+            { id: 'vip_bronze', name: 'VIP Bronze', price: 'R$ 30,00', description: 'Nível de entrada com comandos básicos e tag exclusiva. Perfeito para iniciantes.', features: ['Tag de Nick', 'Comando /kit iniciante', '1 Vaga extra na garagem', 'Suporte Prioritário'], image: './imagens/Vip/vip_bronze.jpg' },
+            { id: 'vip_silver', name: 'VIP Prata', price: 'R$ 60,00', description: 'Benefícios intermediários, ideal para jogadores frequentes que buscam mais customização.', features: ['Tudo do Bronze', 'Comando /cor', 'Acesso a 5 roupas exclusivas', '2 Vagas extras na garagem'], image: './imagens/Vip/vip_silver.jpg' },
+            { id: 'vip_gold', name: 'VIP Ouro', price: 'R$ 100,00', description: 'O pacote mais popular, com acesso a quase todos os benefícios essenciais.', features: ['Tudo do Silver', 'Prioridade na fila (queue)', 'Comando /fix', 'Dinheiro inicial (in-game)'], image: './imagens/Vip/vip_gold.jpg' },
+            { id: 'vip_diamante', name: 'VIP Diamante', price: 'R$ 150,00', description: 'Benefícios premium, acesso antecipado a eventos e itens raros.', features: ['Tudo do Gold', 'Veículo exclusivo mensal', 'Desconto em lojas', 'Acesso a área VIP'], image: './imagens/Vip/vip_diamante.jpg' },
+            { id: 'vip_rubi', name: 'VIP Rubi', price: 'R$ 250,00', description: 'O máximo de prestígio. Benefícios permanentes e únicos para a elite do servidor.', features: ['Todos os benefícios acima', 'Veículo VIP permanente', 'Item cosmético raro', 'Prioridade máxima na fila'], image: './imagens/Vip/vip_rubi.jpg' },
+            { id: 'vip_magnata', name: 'VIP Magnata', price: 'R$ 300,00', description: 'Licença empresarial e privilégios de investidor. Ideal para quem comanda.', features: ['Tudo do Rubi', 'Licença de Negócio', 'Skins de Arma Exclusivas', 'Acesso a leilões de Propriedade'], image: './imagens/Vip/vip_magnata.jpg' },
+            { id: 'vip_empresario', name: 'VIP Empresário', price: 'R$ 250,00', description: 'Foco em benefícios econômicos e acesso a rotas de farm exclusivas.', features: ['Tudo do Diamante', 'Multiplicador de Dinheiro (x1.5)', 'Set de Roupa Formal', 'Comando /teleporte'], image: './imagens/Vip/vip_empresario.jpg' },
+            { id: 'vip_realeza', name: 'VIP Realeza (vitalício)', price: 'R$ 8.000,00', description: 'O nível máximo e vitalício. Todos os benefícios de forma permanente.', features: ['Mansão exclusiva (sua escolha)', 'TAG exclusiva no discord', 'Escolha de 5 Carros exclusivos', '10 Milhões na conta do banco', 'Todos os extras inclusos' ], image: './imagens/Vip/vip_realeza.jpg' }
+        ];
+
+        // =======================================================================
+        // --- DADOS DOS 26 VEÍCULOS - AGORA UTILIZANDO A CHAVE 'image' ---
+        // =======================================================================
+        const vehicleData = [
+            // Todos os 'imageUrl' foram alterados para 'image' com o novo caminho simbólico.
+            {
+                id: 'v01',
+                name: 'Viper GT-X (Esportivo)',
+                price: 'R$ 450.000',
+                category: 'Esportivo',
+                description: 'A mais nova máquina italiana, com fibra de carbono e motor V10. Exclusivo para membros VIP Ouro ou superior.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Velocidade Máx.': '320 km/h',
+                    'Aceleração (0-100)': '2.9s',
+                    'Potência': '850 CV',
+                    'Transmissão': '8 Marchas Sequencial'
+                }
+            },
+            {
+                id: 'v02',
+                name: 'Muscle Beast V8 (Clássico)',
+                price: 'R$ 280.000',
+                category: 'Muscle Car',
+                description: 'Potência bruta e ronco clássico. Perfeito para perseguições e arrancadas na cidade.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Motor': 'V8 Supercharged',
+                    'Torque': '900 Nm',
+                    'Blindagem': 'Leve',
+                    'Combustível': 'Alto Octano'
+                }
+            },
+            {
+                id: 'v03',
+                name: 'Executive Sedan (Luxo)',
+                price: 'R$ 350.000',
+                category: 'Luxo',
+                description: 'O epítome do luxo e discrição. Ideal para empresários e negociações de alto nível. Interior em couro e tecnologia de ponta.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Conforto': 'Máximo',
+                    'Segurança': 'Nível 2',
+                    'Assentos': '4 Pessoas',
+                    'Tecnologia': 'Piloto Automático'
+                }
+            },
+            {
+                id: 'v04',
+                name: 'Hyperion R (Raridade)',
+                price: 'R$ 800.000',
+                category: 'Hiperesportivo',
+                description: 'Um dos carros mais raros do servidor. Apenas 5 unidades disponíveis. Aceleração instantânea e design futurista.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Velocidade Máx.': '380 km/h',
+                    'Aceleração (0-100)': '1.8s',
+                    'Aerodinâmica': 'Ativa',
+                    'Exclusividade': 'Extrema'
+                }
+            },
+            {
+                id: 'v05',
+                name: 'Off-Road Titan (4x4)',
+                price: 'R$ 180.000',
+                category: 'Utilitário',
+                description: 'Domine qualquer terreno. Suspensão elevada, pneus especiais e força incomparável. Perfeito para trilhas e fugas no deserto.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Tração': '4x4 Permanente',
+                    'Suspensão': 'Reforçada',
+                    'Capacidade': '6 Pessoas',
+                    'Utilidade': 'Carga Pesada'
+                }
+            },
+            {
+                id: 'v06',
+                name: 'Street Drifter Z',
+                price: 'R$ 195.000',
+                category: 'Tuning',
+                description: 'Feito sob medida para o drift. Baixo centro de gravidade, pneus de alta performance e um turbo potente.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Dirigibilidade': 'Drift (Alta)',
+                    'Turbo': 'GTX 45',
+                    'Freios': 'Brembo Racing',
+                    'Peso': 'Otimizado'
+                }
+            },
+            {
+                id: 'v07',
+                name: 'Phantom GT (Super Luxo)',
+                price: 'R$ 550.000',
+                category: 'Luxo',
+                description: 'O máximo em prestígio e presença. Este carro fala por si só. Interior customizável.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Motor': 'V12 Silencioso',
+                    'Acabamento': 'Feito a mão',
+                    'Sistema de Som': 'Hi-Fi'
+                }
+            },
+            {
+                id: 'v08',
+                name: 'Racer Pro 99 (Pista)',
+                price: 'R$ 480.000',
+                category: 'Esportivo',
+                description: 'Modelo de corrida legalizado para a rua. Leveza extrema e desempenho de pista.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Downforce': 'Alto',
+                    'Peso': '1200 Kg',
+                    'Suspensão': 'Coilover',
+                    'Pneus': 'Semi-Slick'
+                }
+            },
+            {
+                id: 'v09',
+                name: 'Coupe Elegance (Conversível)',
+                price: 'R$ 220.000',
+                category: 'Luxo',
+                description: 'Passeie pela costa com estilo. Teto retrátil em apenas 5 segundos.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Teto': 'Conversível',
+                    'Aceleração (0-100)': '5.5s',
+                    'Design': 'Moderno',
+                }
+            },
+            {
+                id: 'v10',
+                name: 'Interceptor Turbo',
+                price: 'R$ 310.000',
+                category: 'Esportivo',
+                description: 'Um veículo robusto com turbo de alta pressão. Ideal para patrulhamento ou fugas rápidas.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Potência': '680 CV',
+                    'Velocidade Máx.': '300 km/h',
+                    'Estabilidade': 'Alta',
+                }
+            },
+            {
+                id: 'v11',
+                name: 'The Vintage (Colecionador)',
+                price: 'R$ 950.000',
+                category: 'Clássico',
+                description: 'Uma relíquia. Valoriza a cada dia. Perfeito estado de conservação.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Ano': '1965',
+                    'Status': 'Coleção',
+                    'Motor': 'Original V6',
+                    'Valorização': 'Alta'
+                }
+            },
+            {
+                id: 'v12',
+                name: 'Cargo Heavy Duty (Utilidade)',
+                price: 'R$ 150.000',
+                category: 'Trabalho',
+                description: 'Máxima capacidade de carga para entregas e transporte de itens ilícitos. Blindagem opcional.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Capacidade': 'Carga Máxima',
+                    'Suspensão': 'Reforçada',
+                    'Velocidade Máx.': '180 km/h'
+                }
+            },
+            {
+                id: 'v13',
+                name: 'Apex Speedster',
+                price: 'R$ 410.000',
+                category: 'Esportivo',
+                description: 'Leve, rápido e agressivo. Design inspirado em carros de fórmula.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Peso': 'Ultraleve',
+                    'Potência': '750 CV',
+                    'Freios': 'Cerâmicos'
+                }
+            },
+            {
+                id: 'v14',
+                name: 'The Monarch (SUV Presidencial)',
+                price: 'R$ 650.000',
+                category: 'SUV',
+                description: 'SUV de altíssimo luxo com blindagem completa de fábrica. Segurança e conforto inigualáveis.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Blindagem': 'Nível 5 (Máx.)',
+                    'Assentos': '6 Lugares',
+                    'Tecnologia': 'Visão Noturna'
+                }
+            },
+            {
+                id: 'v15',
+                name: 'Hot Rod Flames',
+                price: 'R$ 170.000',
+                category: 'Custom',
+                description: 'Chama a atenção por onde passa. Pintura customizada com chamas e motor exposto.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Estilo': 'Retrô',
+                    'Aceleração (0-100)': '4.5s',
+                    'Visual': 'Custom'
+                }
+            },
+            {
+                id: 'v16',
+                name: 'Canyon Jumper (Rali)',
+                price: 'R$ 210.000',
+                category: 'Rali/Off-Road',
+                description: 'Projetado para saltos e descidas íngremes. Suspensão de longo curso e gaiola de proteção.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Suspensão': 'Longo Curso',
+                    'Gaiola': 'Sim',
+                    'Durabilidade': 'Extrema'
+                }
+            },
+            {
+                id: 'v17',
+                name: 'Aurora Z-Type',
+                price: 'R$ 380.000',
+                category: 'Esportivo',
+                description: 'Design aerodinâmico e tecnologia híbrida que oferece um pico de potência incrível.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Motor': 'Híbrido',
+                    'Potência Combinada': '700 CV',
+                    'Estabilidade': 'Alta'
+                }
+            },
+            {
+                id: 'v18',
+                name: 'Old-School Lowrider',
+                price: 'R$ 140.000',
+                category: 'Custom',
+                description: 'Sistema hidráulico completo para dançar na rua. O clássico da cultura Lowrider.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Suspensão': 'Hidráulica',
+                    'Rodas': 'Raiadas (Custom)',
+                    'Cores': 'Personalizável'
+                }
+            },
+            {
+                id: 'v19',
+                name: 'Armored Tankard (Militar)',
+                price: 'R$ 700.000',
+                category: 'Segurança',
+                description: 'Um veículo praticamente indestrutível. Ideal para transporte de alto valor ou invasões.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Blindagem': 'Nível 6 (Avançada)',
+                    'Janelas': 'A Prova de Balas',
+                    'Peso': 'Extremamente Pesado'
+                }
+            },
+            {
+                id: 'v20',
+                name: 'Pocket Rocket (Compacto)',
+                price: 'R$ 95.000',
+                category: 'Compacto',
+                description: 'Pequeno no tamanho, mas grande na agilidade. Perfeito para cortar o trânsito e se esconder em becos.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Manobrabilidade': 'Máxima',
+                    'Aceleração (0-100)': '8.0s',
+                    'Tamanho': 'Reduzido'
+                }
+            },
+            {
+                id: 'v21',
+                name: 'Super Van Utility',
+                price: 'R$ 160.000',
+                category: 'Trabalho',
+                description: 'A van mais rápida do servidor. Ótima para trabalho e disfarce. Grande espaço interno.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Capacidade': '10 Pessoas/Grande Carga',
+                    'Potência': '400 CV',
+                    'Discreto': 'Sim'
+                }
+            },
+            {
+                id: 'v22',
+                name: 'Roadster Speedline',
+                price: 'R$ 390.000',
+                category: 'Esportivo',
+                description: 'Um conversível de dois lugares focado na velocidade pura e na experiência de dirigir.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Assentos': '2',
+                    'Teto': 'Aberto',
+                    'Dirigibilidade': 'Pista'
+                }
+            },
+            {
+                id: 'v23',
+                name: 'The Limousine',
+                price: 'R$ 520.000',
+                category: 'Luxo/Exótico',
+                description: 'O maior e mais imponente veículo. Perfeito para festas e transporte de grupos VIP.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Comprimento': 'Extremo',
+                    'Assentos': '8 Pessoas',
+                    'Bar': 'Mini Bar Interno'
+                }
+            },
+            {
+                id: 'v24',
+                name: 'Dune Buggy X-Treme',
+                price: 'R$ 110.000',
+                category: 'Off-Road',
+                description: 'Ideal para dunas e praias. Leve, rápido e resistente à água.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Terreno': 'Areia/Lama',
+                    'Tração': 'Traseira',
+                    'Peso': 'Leve'
+                }
+            },
+            {
+                id: 'v25',
+                name: 'Police Interceptor (Exclusivo)',
+                price: 'R$ 490.000',
+                category: 'Segurança',
+                description: 'Modelo de força-tarefa, superpotente e reforçado. Apenas para facções selecionadas.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Motor': 'Aprimorado',
+                    'Blindagem': 'Média',
+                    'Sirene': 'Customizável'
+                }
+            },
+            {
+                id: 'v26',
+                name: 'The Jet Bike (Moto)',
+                price: 'R$ 200.000',
+                category: 'Moto Exclusiva',
+                description: 'A moto mais rápida do servidor. Aceleração insana e manobrabilidade perfeita.',
+                image: './imagens/Veiculos/',
+                specs: {
+                    'Tipo': 'Motocicleta',
+                    'Aceleração (0-100)': '2.0s',
+                    'Rodas': '2',
+                    'Estilo': 'Futurista'
+                }
+            }
+        ];
+        // =======================================================================
+        // --- FIM DOS DADOS DOS VEÍCULOS ---
+        // =======================================================================
+
+        const mansionData = [
+            // Mantido o array 'images' para o carrossel, mas ajustada a chave interna 'url' para 'image' 
+            { 
+                id: 'mansion_luxo', 
+                name: 'Mansão de Luxo V3', 
+                price: 'R$ 750,00', 
+                category: 'Residencial', 
+                description: 'Uma residência moderna de três andares com vista panorâmica da cidade e garagem subterrânea.',
+                images: [
+                    // ATUALIZADO: Usando a chave 'image' na galeria
+                    { image: './imagens/Mansões/mansion_luxo_1.jpg', alt: 'Vista frontal da Mansão' },
+                    { image: './imagens/Mansões/mansion_luxo_2.jpg', alt: 'Design interno da sala' },
+                    { image: './imagens/Mansões/mansion_luxo_3.jpg', alt: 'Área de lazer e piscina' }
+                ], 
+                features: ['3 Andares', 'Garagem para 10 veículos', 'Piscina aquecida', 'Sistema de Segurança Nível Máximo'] 
+            },
+            { 
+                id: 'mansion_praia', 
+                name: 'Casa na Praia', 
+                price: 'R$ 500,00', 
+                category: 'Litoral', 
+                description: 'Propriedade pé na areia com acesso exclusivo ao mar. Perfeita para relaxar ou festas.',
+                images: [
+                    { image: './imagens/Mansões/mansion_praia_1.jpg', alt: 'Casa de praia com varanda' },
+                    { image: './imagens/Mansões/mansion_praia_2.jpg', alt: 'Deck com churrasqueira' },
+                ], 
+                features: ['Acesso Privado à Praia', 'Deck com churrasqueira', 'Heliporto', 'Design rústico-moderno'] 
+            },
+            { 
+                id: 'mansion_penthouse', 
+                name: 'Penthouse no Centro', 
+                price: 'R$ 600,00', 
+                category: 'Apartamento', 
+                description: 'Cobertura exclusiva com piscina privativa e vista 360 graus do centro financeiro.',
+                images: [
+                    { image: './imagens/Mansões/mansion_penthouse_1.jpg', alt: 'Vista da cobertura' },
+                ], 
+                features: ['Melhor vista da cidade', 'Piscina privativa', 'Sala de cinema', 'Serviço de mordomo (in-game)'] 
+            }
+        ];
+
+        const extraData = [
+            // ATUALIZADO: Usando a chave 'image' com estrutura de caminho local.
+            { id: 'extra_roupas', name: 'Pacote Roupas Raras', price: 'R$ 50,00', description: 'Desbloqueia um set de 10 roupas raras.', image: './imagens/Extras/pacote_roupas.png' },
+            { id: 'extra_armas', name: 'Kit de Armas Letais', price: 'R$ 80,00', description: 'Pacote com armas pesadas e munição.', image: './imagens/Extras/kit_armas.png' },
+            { id: 'extra_dinheiro', name: 'Dinheiro Inicial (1M)', price: 'R$ 40,00', description: 'Um milhão de dinheiro in-game para começar.', image: './imagens/Extras/dinheiro_1m.png' },
+            { id: 'extra_nick', name: 'Troca de Nickname', price: 'R$ 20,00', description: 'Permite alterar seu nome no servidor.', image: './imagens/Extras/troca_nick.png' }
+        ];
+
+        // --- ESTADO GLOBAL DA APLICAÇÃO ---
+        const state = {
+            currentPage: 'home', 
+            currentItem: null,   
+            itemType: null,      
+        };
+        
+        // Mantém o índice do slide atual para o carrossel
+        let currentSlideIndex = 0; 
+
+        // --- FUNÇÃO CENTRAL PARA RESOLVER CAMINHOS DE IMAGEM ---
+        /**
+         * Resolve o caminho de imagem.
+         * NOTA: A lógica de placeholder foi removida. O navegador tentará
+         * carregar o caminho local diretamente.
+         * @param {Object} item - O objeto de dados (VIP, Veículo, Mansão, Extra).
+         * @param {string} type - O tipo do item ('vip', 'vehicle', 'mansion', 'extra').
+         * @returns {string} A URL da imagem a ser exibida.
+         */
+        function resolveImagePath(item, type) {
+            const defaultPlaceholderBase = 'https://placehold.co/800x450';
+            let imagePath = '';
+            let placeholderColor = '1a1a1a/DC2626'; // Cor padrão
+
+            // Lógica para Mansão (usa o array 'images' e a chave 'image')
+            if (type === 'mansion' && item.images && item.images.length > 0) {
+                // Para carrossel de mansões, a imagem deve ser passada como parâmetro na função
+                // Aqui estamos apenas pegando o primeiro item para o card de destaque.
+                imagePath = item.images[0].image; 
+            } else {
+                // Lógica para VIP, Veículo e Extra (usa a chave 'image')
+                imagePath = item.image;
+            }
+
+            // --- ATUALIZAÇÃO ---
+            // A lógica do placeholder foi removida.
+            // Agora, o navegador tentará carregar o caminho local diretamente.
+            // Isso resultará em ícones de "imagem quebrada" no preview,
+            // mas funcionará quando hospedado em um servidor real.
+            return imagePath;
+
+
+            /* LÓGICA DO PLACEHOLDER REMOVIDA (COMENTADA)
+            // Se for um caminho local simbólico
+            if (imagePath && imagePath.startsWith('./imagens/')) {
+                // Extrai o nome do arquivo para usar no texto do placeholder
+                const parts = imagePath.split('/');
+                const filename = parts[parts.length - 1].replace(/(\.jpg|\.png|\.jpeg)/i, '').toUpperCase();
+                
+                // Mapeamento de cores para placeholder baseado no tipo
+                if (type === 'vip') placeholderColor = '2563EB/FFFFFF';
+                if (type === 'vehicle') placeholderColor = 'DC2626/FFFFFF';
+                if (type === 'mansion') placeholderColor = '0D9488/FFFFFF';
+                if (type === 'extra') placeholderColor = 'FBBF24/1F2937';
+
+                return `${defaultPlaceholderBase}/${placeholderColor}?text=${filename}`;
+            }
+
+            // Fallback: Se for uma URL direta ou estiver vazio
+            return imagePath || `${defaultPlaceholderBase}/1a1a1a/DC2626?text=Sem+Imagem`;
+            */
+        }
+
+        // --- FUNÇÕES DE NAVEGAÇÃO E RENDERIZAÇÃO ---
+
+        function getItemData(itemId, type) {
+            let dataArray;
+            if (type === 'vip') dataArray = vipData;
+            else if (type === 'vehicle') dataArray = vehicleData;
+            else if (type === 'mansion') dataArray = mansionData;
+            else if (type === 'extra') dataArray = extraData; 
+            return dataArray ? dataArray.find(v => v.id === itemId) : null;
+        }
+
+        function navigateTo(page, item = null, type = null) {
+            state.currentPage = page;
+            state.currentItem = item;
+            state.itemType = type;
+            // Reseta o índice do carrossel ao mudar de página
+            currentSlideIndex = 0; 
+            renderPage();
+            updateSidebar(page);
+            
+            // Fecha o menu mobile após a navegação (se estiver aberto)
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('mobile-menu-open')) {
+                toggleMobileMenu();
+            }
+        }
+
+        function updateSidebar(activePage) {
+            document.querySelectorAll('aside button').forEach(button => {
+                button.classList.remove('sidebar-active');
+            });
+            
+            let navId = `nav-${activePage}`;
+            
+            if (activePage === 'details' || activePage === 'instructions') { // Adiciona 'instructions'
+                if (state.itemType === 'vip') navId = 'nav-vips';
+                else if (state.itemType === 'vehicle') navId = 'nav-vehicles';
+                else if (state.itemType === 'mansion') navId = 'nav-mansions';
+                else if (state.itemType === 'extra') navId = 'nav-extras'; 
+            }
+            
+            const activeNav = document.getElementById(navId);
+            if (activeNav) {
+                activeNav.classList.add('sidebar-active');
+            }
+        }
+
+        function renderPage() {
+            const container = document.getElementById('content-container');
+            
+            // Remove a classe de animação para garantir que ela seja aplicada novamente
+            container.classList.remove('content-fade-in'); 
+            
+            // Limpa o conteúdo antes de renderizar o novo
+            container.innerHTML = ''; 
+
+            let html = '';
+            
+            switch (state.currentPage) {
+                case 'home':
+                    html = renderHome();
+                    break;
+                case 'vips':
+                    html = renderList('Planos VIP', 'vips-list', vipData, 'vip');
+                    break;
+                case 'vehicles':
+                    html = renderList('Veículos Exclusivos (26 Modelos)', 'vehicles-list', vehicleData, 'vehicle');
+                    break;
+                case 'mansions':
+                    html = renderList('Mansões e Propriedades', 'mansions-list', mansionData, 'mansion');
+                    break;
+                case 'extras':
+                    html = renderList('Pacotes e Extras', 'extras-list', extraData, 'extra');
+                    break;
+                case 'details':
+                    html = renderDetailsPage(state.currentItem, state.itemType);
+                    break;
+                case 'instructions': // NOVO: Renderiza a página de instruções
+                    html = renderInstructions();
+                    break;
+            }
+
+            container.innerHTML = html;
+
+            // Aplica a animação após o conteúdo ser carregado
+            requestAnimationFrame(() => {
+                container.classList.add('content-fade-in');
+            });
+        }
+
+        // --- RENDERIZADORES DE PÁGINAS ---
+
+        function renderHome() {
+            // Usa o VIP de nível mais alto (Realeza) e os itens mais caros como destaque
+            const highlightVip = vipData.find(v => v.id === 'vip_realeza');
+            // Destaque o primeiro veículo da nova lista
+            const highlightVehicle = vehicleData[0]; 
+            const highlightMansion = mansionData[0];
+            
+            return `
+                <div class="text-center bg-card-bg p-10 rounded-xl shadow-2xl border-t-8 border-primary-red space-y-4">
+                    <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-white">Bem-vindo(a) à <span class="text-primary-red">Store Premium</span></h2>
+                    <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
+                        Acesso exclusivo aos melhores veículos, planos VIP e pacotes de customização para elevar sua experiência de jogo.
+                    </p>
+                </div>
+                
+                <div class="mt-12 space-y-10">
+                    <h3 class="text-3xl font-bold border-l-4 border-primary-red pl-3 text-white">🏆 Destaques da Semana</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        ${renderHighlightCard(highlightVip, 'vip')}
+                        ${renderHighlightCard(highlightVehicle, 'vehicle')}
+                        ${renderHighlightCard(highlightMansion, 'mansion')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderHighlightCard(item, type) {
+            if (!item) return ''; // Garante que não falhe se o item não for encontrado
+            
+            const isVehicle = type === 'vehicle';
+            const isMansion = type === 'mansion';
+            const isExtra = type === 'extra'; 
+            
+            let buttonText = 'Ver Detalhes';
+            let categoryText = 'Plano VIP';
+            if (isVehicle) categoryText = item.category || 'Veículo';
+            else if (isMansion) categoryText = 'Propriedade';
+            else if (isExtra) categoryText = 'Pacote'; 
+            
+            if (isVehicle) buttonText = 'Ver Modelo';
+            else if (isMansion) buttonText = 'Ver Tour';
+            else if (isExtra) buttonText = 'Ver Item'; 
+
+            // NOVO: Usa a função resolveImagePath
+            const imageUrl = resolveImagePath(item, type);
+            const priceText = item.price;
+
+            // Renderiza o placeholder se a URL da imagem estiver vazia
+            let imageHtml = '';
+            if (imageUrl) {
+                imageHtml = `<img src="${imageUrl}" alt="${item.name}" 
+                    class="w-full h-full object-cover transition duration-500 hover:scale-105"
+                    onerror="this.onerror=null; this.src='https://placehold.co/800x450/1a1a1a/DC2626?text=FALHA+AO+CARREGAR';"
+                />`;
+            } else {
+                // Placeholder padrão
+                imageHtml = `<div class="w-full h-full flex items-center justify-center bg-dark-bg text-primary-red text-center">
+                    <span class="text-xl font-bold">Sem Pré-visualização</span>
+                </div>`;
+            }
+
+            return `
+                <div class="bg-sub-bg rounded-xl shadow-xl hover-effect">
+                    <div class="h-40 overflow-hidden rounded-t-xl">
+                        ${imageHtml}
+                    </div>
+                    <div class="p-5 space-y-2">
+                        <p class="text-xs font-semibold uppercase text-gray-500">${categoryText}</p>
+                        <h4 class="text-2xl font-bold text-white">${item.name}</h4>
+                        <p class="text-lg font-extrabold text-primary-red">${priceText}</p>
+                        <button onclick="navigateTo('details', '${item.id}', '${type}')" 
+                                class="w-full btn-primary text-white py-2 rounded-lg font-semibold mt-3">
+                            ${buttonText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renderiza a lista de VIPs, Veículos, Mansões ou Extras
+        function renderList(title, id, data, type) {
+            const isVehicle = type === 'vehicle';
+            const isMansion = type === 'mansion';
+            const isExtra = type === 'extra';
+
+            let buttonText = 'Detalhes';
+            if (isVehicle) buttonText = 'Ver Especificações';
+            if (isMansion) buttonText = 'Ver Tour';
+            if (isExtra) buttonText = 'Ver Item'; 
+
+            const listCategoryLabel = isMansion ? 'Propriedade' : (isVehicle ? 'Veículo' : (isExtra ? 'Pacote' : 'Plano'));
+
+            // Mapeia os dados para cards de lista
+            const cardsHtml = data.map(item => {
+                // NOVO: Usa a função resolveImagePath
+                const imageUrl = resolveImagePath(item, type);
+                
+                let imageHtml;
+                if (imageUrl) {
+                    imageHtml = `<img src="${imageUrl}" alt="${item.name}" 
+                        class="w-full h-full object-cover transition duration-500 hover:scale-105"
+                        onerror="this.onerror=null; this.src='https://placehold.co/800x450/1a1a1a/DC2626?text=FALHA+AO+CARREGAR';"
+                    />`;
+                } else if (isExtra) {
+                    // Placeholder customizado para Extras: Apenas um ícone grande
+                    imageHtml = `<div class="w-full h-full flex flex-col items-center justify-center bg-dark-bg text-white/50 text-center p-4">
+                        <span class="text-5xl mb-1">&#127873;</span>
+                        <span class="text-sm font-bold">Pacote Digital</span>
+                    </div>`;
+                } else {
+                    // Placeholder padrão para VIPs, Veículos (sem imagem)
+                    imageHtml = `<div class="w-full h-full flex items-center justify-center bg-dark-bg text-primary-red text-center">
+                        <span class="text-xl font-bold">Sem Pré-visualização</span>
+                    </div>`;
+                }
+
+                return `
+                    <div class="bg-sub-bg rounded-xl shadow-lg hover-effect">
+                        <div class="h-48 overflow-hidden rounded-t-xl">
+                            ${imageHtml}
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <p class="text-sm font-semibold uppercase text-gray-500">${item.category || listCategoryLabel}</p>
+                            <h4 class="text-xl font-bold text-white">${item.name}</h4>
+                            <p class="text-lg font-extrabold text-primary-red">${item.price}</p>
+                            <p class="text-gray-400 text-sm h-10 overflow-hidden">${item.description.substring(0, 70)}...</p>
+                            <button onclick="navigateTo('details', '${item.id}', '${type}')" 
+                                    class="w-full btn-primary text-white py-2 rounded-lg font-semibold mt-3">
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Monta a página de lista
+            return `
+                <h2 class="text-4xl font-extrabold text-white mb-6 border-b pb-2 border-primary-red/50">${title}</h2>
+                <!-- O grid é automaticamente responsivo: 1 coluna (mobile), 2 (sm), 3 (lg), 4 (xl) -->
+                <div id="${id}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    ${cardsHtml}
+                </div>
+            `;
+        }
+        
+        // Função do Carrossel: Avanca ou Volta (1 ou -1)
+        function changeSlide(direction) {
+            const carouselImages = document.getElementById('carousel-images');
+            const totalSlides = carouselImages.children.length;
+            
+            // Calcula o novo índice
+            let newIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+            currentSlideIndex = newIndex;
+
+            // Esconde todos e mostra o novo
+            for (let i = 0; i < totalSlides; i++) {
+                carouselImages.children[i].classList.add('hidden');
+            }
+            carouselImages.children[currentSlideIndex].classList.remove('hidden');
+        }
+
+        // Renderiza o Carrossel de Imagens (Apenas para Mansões)
+        function renderMansionCarousel(images) {
+            // Garante que o índice inicial seja 0, mesmo se o usuário navegar para trás
+            currentSlideIndex = 0; 
+
+            if (!images || images.length === 0) {
+                return `<div class="w-full max-h-96 h-96 flex items-center justify-center bg-dark-bg text-primary-red text-center rounded-md border-2 border-primary-red/50">
+                    <span class="text-2xl font-bold">Sem Galeria de Imagens</span>
+                </div>`;
+            }
+
+            const slidesHtml = images.map((img, index) => {
+                // NOVO: Resolve a URL da imagem interna da galeria
+                const imageUrl = resolveImagePath({ image: img.image }, 'mansion');
+                
+                return `
+                    <img 
+                        src="${imageUrl}" 
+                        alt="${img.alt}" 
+                        class="w-full max-h-96 object-cover rounded-md transition duration-500 ease-in-out ${index !== 0 ? 'hidden' : ''}" 
+                        onerror="this.onerror=null; this.src='https://placehold.co/800x450/1A1A1A/DC2626?text=Falha+ao+Carregar+Imagem';" 
+                    />
+                `;
+            }).join('');
+
+            return `
+                <div class="relative w-full max-h-96 h-96 bg-sub-bg rounded-lg shadow-inner overflow-hidden">
+                    <!-- Imagens do Carrossel -->
+                    <div id="carousel-images" class="w-full h-full">
+                        ${slidesHtml}
+                    </div>
+
+                    <!-- Controles de Navegação -->
+                    ${images.length > 1 ? `
+                        <button onclick="changeSlide(-1)" class="absolute left-3 top-1/2 transform -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition">
+                            &lt;
+                        </button>
+                        <button onclick="changeSlide(1)" class="absolute right-3 top-1/2 transform -translate-y-1/2 p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition">
+                            &gt;
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+
+        // Renderiza a página de detalhes (VIP, Veículo, Mansão ou Extra)
+        function renderDetailsPage(itemId, type) {
+            let dataArray;
+            
+            if (type === 'vip') dataArray = vipData;
+            else if (type === 'vehicle') dataArray = vehicleData;
+            else if (type === 'mansion') dataArray = mansionData;
+            else if (type === 'extra') dataArray = extraData; 
+            else return `<p class="text-xl text-center text-red-500 mt-20">Tipo de item inválido.</p>`;
+
+            const data = dataArray.find(v => v.id === itemId);
+
+            if (!data) return `<p class="text-xl text-center text-red-500 mt-20">Item não encontrado.</p>`;
+
+            const isVehicle = type === 'vehicle';
+            const isMansion = type === 'mansion';
+            const isExtra = type === 'extra';
+
+            let listTitle = 'Benefícios do Plano';
+            if (isVehicle) listTitle = 'Especificações Chave';
+            else if (isMansion) listTitle = 'Características da Propriedade';
+            else if (isExtra) listTitle = 'Conteúdo do Pacote'; 
+
+            // Normaliza a lista de features/specs para o template
+            let itemsList = [];
+            if (isVehicle) {
+                // Transforma o objeto 'specs' (chave: valor) em um array de {label: chave, value: valor}
+                itemsList = Object.entries(data.specs || {}).map(([key, value]) => ({ label: key, value: value }));
+            } else {
+                // Para outros tipos, usa 'features'
+                itemsList = (data.features || []).map(f => ({ label: f, value: '.' }));
+            }
+
+            const priceSuffix = isVehicle || isMansion || isExtra ? '' : '/ Mês';
+
+            let backButtonLabel = 'Voltar';
+            if (type === 'vip') backButtonLabel = 'Planos VIP';
+            else if (type === 'vehicle') backButtonLabel = 'Veículos';
+            else if (type === 'mansion') backButtonLabel = 'Mansões';
+            else if (type === 'extra') backButtonLabel = 'Extras';
+
+            // Lógica de Imagem: Carrossel para Mansões, Imagem Única/Placeholder para os outros
+            let imageDisplayHtml = '';
+
+            if (isMansion) {
+                // Renderiza o carrossel para mansões (usa o array 'images' da data)
+                imageDisplayHtml = renderMansionCarousel(data.images);
+            } else {
+                // Renderiza imagem única ou placeholder para VIP/Veículo/Extra
+                // NOVO: Usa a função resolveImagePath
+                const imageUrl = resolveImagePath(data, type);
+                
+                imageDisplayHtml = imageUrl ? 
+                    `<img 
+                        id="detail-product-image"
+                        src="${imageUrl}" 
+                        alt="${data.name}" 
+                        class="w-full max-h-96 object-cover rounded-md border-2 border-primary-red/50" 
+                        onerror="this.onerror=null; this.src='https://placehold.co/800x450/1a1a1a/DC2626?text=FALHA+AO+CARREGAR';" 
+                    />` 
+                    :
+                    `<div id="detail-product-image" class="w-full max-h-96 h-96 flex items-center justify-center bg-dark-bg text-primary-red text-center rounded-md border-2 border-primary-red/50">
+                        <span class="text-2xl font-bold">${isExtra ? 'Pacote Digital (Sem Foto)' : 'Sem Imagem Cadastrada'}</span>
+                    </div>`;
+            }
+
+
+            let detailsContent = `
+                <div class="flex items-center space-x-4 mb-8 text-gray-500 hover:text-primary-red cursor-pointer transition" onclick="navigateTo('${type}s')">
+                    <!-- Icone de Seta para Esquerda -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 0 010-1.414l4-4a1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Voltar para a Lista de ${backButtonLabel}</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 bg-card-bg p-6 md:p-10 rounded-xl shadow-2xl border-t-8 border-primary-red">
+                    
+                    <!-- Coluna 1: Imagem/Carrossel e Informações Principais (Ocupa 2/3 da tela no desktop) -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-white leading-tight">${data.name}</h1>
+                        <p class="text-xl font-bold text-primary-red">${data.price} <span class="text-gray-400 text-base font-normal">${priceSuffix}</span></p>
+
+                        <!-- Área da Imagem/Carrossel -->
+                        <div class="bg-sub-bg p-2 rounded-lg shadow-inner">
+                            ${imageDisplayHtml}
+                        </div>
+                    </div>
+
+                    <!-- Coluna 2: Detalhes, Specs e Botão de Ação (Ocupa 1/3 da tela no desktop) -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <h2 class="text-xl font-medium text-gray-300 border-b border-gray-700 pb-2">Descrição</h2>
+                        <p class="text-gray-300 text-lg italic">${data.description}</p>
+
+                        <h4 class="text-2xl font-bold text-primary-red">${listTitle}</h4>
+                        <ul class="space-y-3 p-4 bg-sub-bg rounded-lg shadow-inner">
+                            ${itemsList.length > 0 ? itemsList.map(item => `
+                                <li class="flex justify-between items-start text-gray-300">
+                                    <span class="font-semibold text-gray-200">${item.label || item}:</span>
+                                    <span class="text-sm font-medium text-primary-red text-right">${item.value || 'Sim'}</span>
+                                </li>
+                            `).join('') : '<li class="text-gray-500">Nenhum detalhe específico fornecido.</li>'}
+                        </ul>
+                        
+                        <button onclick="navigateTo('instructions', '${data.id}', '${type}')" class="w-full btn-primary text-white py-3 rounded-lg font-extrabold text-lg mt-8 shadow-2xl">
+                            COMPRAR AGORA (${data.price})
+                        </button>
+                    </div>
+                </div>
+            `;
+            return detailsContent;
+        }
+
+        // Função para renderizar a página de instruções de compra
+        function renderInstructions() {
+            const item = getItemData(state.currentItem, state.itemType);
+            
+            // Fallback se item não for encontrado
+            const productName = item ? item.name : 'o Produto Selecionado';
+            const productPrice = item ? item.price : 'o Valor';
+            const backTo = item ? `MapsTo('details', '${item.id}', '${state.itemType}')` : `MapsTo('home')`;
+
+            return `
+                <div class="space-y-8 p-6 md:p-10 bg-card-bg rounded-xl shadow-2xl border-t-8 border-primary-red">
+                    <div class="bg-discord-dark p-8 rounded-xl border-2 border-discord-purple">
+                        <h1 class="text-3xl font-extrabold text-yellow-400 mb-4 flex items-center">
+                            <span class="text-4xl mr-3">🛒</span> Confirmação e Instruções de Compra
+                        </h1>
+                        <p class="text-lg mb-6 text-gray-300">
+                            Você está prestes a adquirir <strong class="text-primary-red">${productName}</strong> pelo valor de <strong class="text-primary-red">${productPrice}</strong>.
+                            Para garantir a sua compra de forma segura e rápida, pedimos que siga os passos abaixo no nosso servidor oficial do Discord:
+                        </p>
+
+                        <div class="space-y-6">
+                            <!-- Passo 1: Acesse o Servidor Discord -->
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-discord-purple text-white rounded-full font-bold mr-4">1</span>
+                                <div>
+                                    <p class="text-xl font-semibold mb-1 text-white">Acesse o Servidor Discord</p>
+                                    <p class="text-gray-400">
+                                        Se ainda não faz parte, entre no nosso servidor oficial para darmos continuidade ao processo.
+                                        (O link para o Discord é geralmente fornecido no site principal ou redes sociais).
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Passo 2: Canal de Atendimento -->
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-discord-purple text-white rounded-full font-bold mr-4">2</span>
+                                <div>
+                                    <p class="text-xl font-semibold mb-1 text-white">
+                                        Localize o Canal de Venda
+                                    </p>
+                                    <p class="text-gray-400">
+                                        Procure e entre no canal de texto com o nome exato:
+                                        <code class="bg-gray-700 text-yellow-300 px-2 py-1 rounded font-mono text-base ml-1 select-all">
+                                            『❗』Aguardando Venda
+                                        </code>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Passo 3: Finalizar a Compra -->
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-discord-purple text-white rounded-full font-bold mr-4">3</span>
+                                <div>
+                                    <p class="text-xl font-semibold mb-1 text-white">
+                                        Informe o Produto Desejado
+                                    </p>
+                                    <p class="text-gray-400">
+                                        No canal <code class="bg-gray-700 text-yellow-300 px-1 rounded font-mono">『❗』Aguardando Venda</code>, inicie a compra de uma das seguintes formas:
+                                    </p>
+                                    <ul class="list-disc list-inside ml-4 mt-2 text-gray-400 space-y-1">
+                                        <li>
+                                            **Mensagem Direta:** Envie uma mensagem simples informando o produto: <strong class="text-white">${productName} (${productPrice})</strong>.
+                                        </li>
+                                        <li>
+                                            **Abrir Ticket:** Utilize o comando ou reação para abrir um **Ticket** de suporte e especifique o item desejado para um atendimento privado.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+            `;
+        }
+
+        // Função para alternar o menu mobile
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const button = document.getElementById('mobile-menu-button');
+            const isOpen = sidebar.classList.toggle('mobile-menu-open');
+            sidebar.classList.toggle('mobile-menu-closed');
+            
+            // Troca o ícone do botão
+            button.innerHTML = isOpen ? '&#10005;' : '&#9776;'; // X ou Hambúrguer
+        }
+
+
+        // --- INICIALIZAÇÃO ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializa mostrando a seção 'home'
+            navigateTo('home');
+
+            // Adiciona listener para o botão de menu mobile
+            document.getElementById('mobile-menu-button').addEventListener('click', toggleMobileMenu);
+
+            // Adiciona um listener para fechar o menu mobile ao clicar no conteúdo
+            const contentContainer = document.getElementById('content-container');
+            
+            contentContainer.addEventListener('click', () => {
+                const sidebar = document.getElementById('sidebar');
+                // Fecha o menu mobile se ele estiver aberto E o clique não for dentro do próprio menu (o que é tratado pela navegação)
+                if (window.innerWidth < 640 && sidebar.classList.contains('mobile-menu-open')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
